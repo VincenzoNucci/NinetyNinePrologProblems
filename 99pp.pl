@@ -42,17 +42,17 @@ mycount(0,[]).
 mycount(K,[_|T]) :- mycount(X,T),K is X + 1.
 
 % Problem 05: Reverse a list
-% My solution [DOES NOT WORK - Result: X = [[[[d]|c]|b]|a] ;]
+% ? - revers([a,b,c,d],R).
+% R = [d,c,b,a].
+% My solution [DOES NOT WORK - Result: R = [[[[d]|c]|b]|a] ;]
 revers(X,L1) :- rev(X,L1,[]).
-
 rev([],D,D).
-rev([A|B],L1,Z) :- rev(B,L1,[A|Z]).
+rev([H|T1],L1,T2) :- rev(T1,L1,[H|T2]).
 
 % Correct solution
-myreverse(L1,L2) :- myrev(L1,L2,[]).
-
-myrev([],L2,L2).
-myrev([X|Xs],L2,Acc) :- myrev(Xs,L2,[X|Acc]).
+% myreverse(L1,L2) :- myrev(L1,L2,[]).
+% myrev([],L2,L2).
+% myrev([X|Xs],L2,Acc) :- myrev(Xs,L2,[X|Acc]).
 
 % Problem 06: Find out wether a list is palindrome
 % My solution [DOES NOT WORK]
@@ -63,7 +63,7 @@ myrev([X|Xs],L2,Acc) :- myrev(Xs,L2,[X|Acc]).
  pal([H|T],Z):- pal(T,Z).
 
 % Correct solution
-palindrome(X) :- myreverse(X,X).
+% palindrome(X) :- myreverse(X,X).
 
 % Problem 07: Flatten a nested list structure
 % Transform a list, possibly holding lists as elements into a `flat' list by replacing each list with its elements (recursively).
@@ -147,16 +147,22 @@ split([H|T1],0,L1,[H|T2]) :- split(T1,0,L1,T2).
 % K'th element of the original list (included), start counting with 1.
 % ?- slice([a,b,c,d,e,f,g,h,i,k],3,7,L).
 % X = [c,d,e,f,g]
-% My solution: [NEED ADJUSTS BUT WORKS]
-slice(_,1,1,[]).
-slice([_|T],I,K,R) :- I > 0,A is I - 1,B is K -1,slice(T,A,B,R),!.
-slice([H|T1],1,K,[H|T2]) :- K > 1,B is K - 1,slice(T1,1,B,T2).
+% My solution: [WORKS]
+slice(_,1,0,[]).
+slice([_|T],I,K,R) :- I > 1,A is I - 1,B is K -1,slice(T,A,B,R),!.
+slice([H|T1],1,K,[H|T2]) :- K > 0,B is K - 1,slice(T1,1,B,T2).
 
 % Problem 19: Rotate a list N places to the left
 % ?- rotate([a,b,c,d,e,f,g,h],3,X).
 % X = [d,e,f,g,h,a,b,c]
 % ?- rotate([a,b,c,d,e,f,g,h],-2,X).
 % X = [g,h,a,b,c,d,e,f]
+% My solution: [DOES NOT WORK FOR NEGATIVE INDICES]
+rotate(_,0,[]).
+rotate(L,I,R) :- I > 0,split(L,I,L1,L2),append(L2,L1,R),!.
+rotate(L,I,R) :- I < 0,K is abs(I),revers(L,LRev),split(LRev,K,L1,L2),append(L2,L1,R).
+
+% Problem 20: Remove the K'th element from a list
 
 
 % ------------------------------Arithmetics-------------------------------------------
